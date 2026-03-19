@@ -57,7 +57,39 @@ seed query ──→ [1] resolve-seed
 | # | Stage | Input | Output | Description |
 |---|-------|-------|--------|-------------|
 | 1 | resolve-seed | DOI / arXiv ID / title | seed_resolved.json | Resolve user query to canonical paper record via OpenAlex |
-| 2 | expand-candidates | seed_resolved.json | nodes_raw.json, edges_raw.json | Recursively find citing papers until no new eligible children |
+| 2 | expand-candidates | seed_resolved.json | nodes_raw.json, edges_raw.json, run_manifest.json | BFS expansion of citing works from seed |
+
+## Stage 2: expand-candidates Details
+
+### Strategy
+BFS (breadth-first search) from seed paper using incoming citations (works that cite the current node). At this stage, all edges are raw citation candidates — no strength classification yet.
+
+### OpenAlex API
+- Endpoint: `GET /works?filter=cites:{openalex_id}&per_page=200&cursor=*`
+- Cursor-based pagination: first page uses `cursor=*`, subsequent pages use `meta.next_cursor`
+- Each page URL is independently cached
+
+### Default Parameters
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| max_depth | 3 | BFS depth from seed (0=seed, 1=direct citers, 2=citers of citers) |
+| max_nodes | 500 | Soft cap on total nodes collected |
+| max_pages | 5 | Pages per node (~1000 citers max per node) |
+
+### Checkpoint/Resume
+- BFS state saved to `expand_checkpoint.json` after each node expansion
+- On resume: validates seed_id and config match, otherwise starts fresh
+- Atomic writes via temp file + rename to prevent corruption
+- Checkpoint deleted on successful completion
+
+### Known Noise Sources
+At this stage, the raw candidate graph contains significant noise:
+1. **Non-technical papers**: surveys, benchmarks, datasets, applications that cite the seed but aren't part of the research trunk
+2. **Tangential citations**: papers that cite the seed in related work only, without treating it as a baseline
+3. **Breadth explosion**: highly-cited papers generate many candidates at depth 1, most of which are irrelevant
+4. **Missing edges**: OpenAlex may not have complete citation data for recent papers
+
+These are addressed by downstream stages (classify-papers, extract-evidence, prune-graph).
 | 3 | classify-papers | nodes_raw.json | paper_types.json | Classify each paper as technical/survey/dataset/benchmark/etc. |
 | 4 | fetch-content | nodes_raw.json | content_manifest.json | Download open-access full text for evidence extraction |
 | 5 | extract-evidence | content_manifest.json + edges_raw.json | edge_evidence.json | Find evidence snippets that justify each edge |

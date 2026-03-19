@@ -139,3 +139,53 @@ class OpenAlexClient:
         if data is None:
             return []
         return data.get("results", [])
+
+    def get_citing_works(
+        self,
+        openalex_id: str,
+        max_pages: int = 5,
+        per_page: int = 200,
+    ) -> tuple[list[dict], int]:
+        """Fetch works that cite the given paper, with cursor pagination.
+
+        Returns (list_of_work_dicts, total_count).
+        """
+        # Normalize to short ID
+        short_id = openalex_id
+        if "/" in short_id:
+            short_id = short_id.rsplit("/", 1)[-1]
+
+        all_results: list[dict] = []
+        total_count = 0
+        cursor = "*"
+
+        for page in range(max_pages):
+            params = {
+                "filter": f"cites:{short_id}",
+                "per_page": str(per_page),
+                "cursor": cursor,
+                "mailto": self.mailto,
+            }
+            url = f"{OPENALEX_BASE}/works?{urlencode(params)}"
+            data = self._get(url)
+            if data is None:
+                break
+
+            meta = data.get("meta", {})
+            if page == 0:
+                total_count = meta.get("count", 0)
+                logger.info("Citing works for %s: %d total", short_id, total_count)
+
+            results = data.get("results", [])
+            if not results:
+                break
+            all_results.extend(results)
+
+            next_cursor = meta.get("next_cursor")
+            if not next_cursor:
+                break
+            cursor = next_cursor
+
+            logger.debug("Page %d: got %d results, cursor=%s", page + 1, len(results), cursor)
+
+        return all_results, total_count

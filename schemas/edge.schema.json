@@ -16,7 +16,7 @@
     },
     "strength": {
       "type": "string",
-      "enum": ["strong", "medium", "weak"]
+      "enum": ["strong", "medium", "weak", "candidate"]
     },
     "evidence": {
       "type": "array",
