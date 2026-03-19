@@ -131,6 +131,34 @@ Evidence types: `related_work_only`, `generic_citation`
 | system | Optional, hidden by default |
 | unknown | Pending classification |
 
+## Visibility Policy
+
+Each paper type maps to a display strategy:
+
+| Type | Main Graph | Side Table | Side Table Kind |
+|------|-----------|------------|-----------------|
+| technical | Yes | No | — |
+| survey | No | Yes | survey |
+| dataset | No | Yes | dataset |
+| benchmark | No | Yes | benchmark |
+| application | No | No | — |
+| theory | No | No | — |
+| system | No | No | — |
+| unknown | Yes | No | — |
+
+`unknown` defaults to main graph (conservative: prefer showing over hiding).
+
+### Classification Rules (priority order)
+
+1. **Title keywords** (confidence 0.9): word-boundary match for survey/review/benchmark/dataset/corpus
+2. **OpenAlex type** (confidence 0.85): `review` → survey, `dataset` → dataset
+3. **Venue keywords** (confidence 0.7): venue name contains dataset/benchmark/shared task
+4. **Abstract keywords** (confidence 0.6-0.7): specific phrases like "we survey", "we introduce a dataset"
+5. **Topic signals** (confidence 0.5): OpenAlex topic display_name with score > 0.5
+6. **Default** (confidence 0.4): article/preprint/conference-paper → technical; otherwise unknown
+
+Application, theory, and system types are not auto-classified — they require deeper semantic understanding and are deferred to future LLM-based classification.
+
 ## Data Source
 
 Current stage: **OpenAlex only**.
