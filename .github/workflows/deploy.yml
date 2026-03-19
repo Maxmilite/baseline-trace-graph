@@ -47,10 +47,10 @@ jobs:
             openalex-cache-
 
       - name: "Pipeline: resolve-seed"
-        run: btgraph resolve-seed "${{ inputs.seed_query }}" --mailto "${{ secrets.OPENALEX_MAILTO }}"
+        run: btgraph resolve-seed "${{ inputs.seed_query }}" --api-key "${{ secrets.OPENALEX_API_KEY }}"
 
       - name: "Pipeline: expand-candidates"
-        run: btgraph expand-candidates --mailto "${{ secrets.OPENALEX_MAILTO }}"
+        run: btgraph expand-candidates --api-key "${{ secrets.OPENALEX_API_KEY }}"
 
       - name: "Pipeline: classify-papers"
         run: btgraph classify-papers

@@ -4,8 +4,8 @@
 
 1. **GitHub Pages**: Settings → Pages → Source → select **GitHub Actions**
 2. **Repository Secret**: Settings → Secrets and variables → Actions → New repository secret
-   - Name: `OPENALEX_MAILTO`
-   - Value: your email address (for OpenAlex polite pool, gives higher rate limits)
+   - Name: `OPENALEX_API_KEY`
+   - Value: your API key from [openalex.org/settings/api](https://openalex.org/settings/api) (free, takes 30 seconds to register)
 
 ## How to Trigger
 
@@ -73,6 +73,11 @@ The seed query couldn't be resolved. Check:
 ### Pipeline fails at expand-candidates
 Usually a network issue or OpenAlex rate limiting. The step supports checkpoint/resume, so re-running the workflow will pick up where it left off (via the OpenAlex cache).
 
+### API key issues
+- Get a free API key at [openalex.org/settings/api](https://openalex.org/settings/api)
+- Without a key, you get very limited access
+- Ensure the `OPENALEX_API_KEY` secret is set correctly in repository settings
+
 ### Deploy job fails
 - Verify GitHub Pages is enabled with source set to "GitHub Actions"
 - Check that the repository has Pages permissions (public repos have this by default)
@@ -85,6 +90,6 @@ Usually a network issue or OpenAlex rate limiting. The step supports checkpoint/
 
 ## Security
 
-- `OPENALEX_MAILTO` is only used as a CLI argument during the build job
+- `OPENALEX_API_KEY` is only used as a CLI argument during the build job
 - No secrets are injected into the frontend bundle (Vite only exposes `VITE_`-prefixed env vars)
 - The deployed site contains only static HTML/JS/CSS and JSON data files

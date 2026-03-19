@@ -1,7 +1,7 @@
 """OpenAlex API client with file-based caching and retry logic.
 
 Sole data source for the baseline-trace-graph pipeline.
-All requests go through the polite pool (mailto parameter).
+Requires a free API key from https://openalex.org/settings/api.
 """
 
 import logging
@@ -15,7 +15,6 @@ from btgraph.cache import FileCache
 logger = logging.getLogger(__name__)
 
 OPENALEX_BASE = "https://api.openalex.org"
-DEFAULT_MAILTO = "btgraph-user@example.com"
 
 
 class OpenAlexError(Exception):
@@ -31,22 +30,26 @@ class OpenAlexClient:
     def __init__(
         self,
         cache: FileCache,
-        mailto: str = DEFAULT_MAILTO,
+        api_key: str | None = None,
         timeout: float = 30.0,
         max_retries: int = 3,
     ):
         self.cache = cache
-        self.mailto = mailto
+        self.api_key = api_key
         self.timeout = timeout
         self.max_retries = max_retries
 
     def _build_url(self, path: str, params: dict | None = None) -> str:
-        """Build full URL with mailto parameter."""
+        """Build full URL with api_key parameter."""
         url = f"{OPENALEX_BASE}{path}"
-        all_params = {"mailto": self.mailto}
+        all_params: dict[str, str] = {}
+        if self.api_key:
+            all_params["api_key"] = self.api_key
         if params:
             all_params.update(params)
-        return f"{url}?{urlencode(all_params)}"
+        if all_params:
+            return f"{url}?{urlencode(all_params)}"
+        return url
 
     def _get(self, url: str) -> dict | None:
         """GET with cache-first, retry, timeout.
@@ -160,12 +163,13 @@ class OpenAlexClient:
         cursor = "*"
 
         for page in range(max_pages):
-            params = {
+            params: dict[str, str] = {
                 "filter": f"cites:{short_id}",
                 "per_page": str(per_page),
                 "cursor": cursor,
-                "mailto": self.mailto,
             }
+            if self.api_key:
+                params["api_key"] = self.api_key
             url = f"{OPENALEX_BASE}/works?{urlencode(params)}"
             data = self._get(url)
             if data is None:

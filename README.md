@@ -47,10 +47,10 @@ cd ../site && npm install
 
 ```bash
 # 1. 解析 seed paper
-btgraph resolve-seed "Attention Is All You Need" --mailto your@email.com
+btgraph resolve-seed "Attention Is All You Need" --api-key YOUR_KEY
 
 # 2. 展开候选引用网络
-btgraph expand-candidates --mailto your@email.com
+btgraph expand-candidates --api-key YOUR_KEY
 
 # 3. 分类论文类型
 btgraph classify-papers
@@ -83,7 +83,7 @@ cd site && npm run build && npm run preview
 This project supports one-click deployment to GitHub Pages via GitHub Actions:
 
 1. Settings → Pages → Source → **GitHub Actions**
-2. Settings → Secrets → 添加 `OPENALEX_MAILTO`（你的邮箱）
+2. Settings → Secrets → 添加 `OPENALEX_API_KEY`（从 [openalex.org/settings/api](https://openalex.org/settings/api) 获取，免费注册）
 3. Actions → **Deploy Baseline Trace Graph** → Run workflow → 输入 seed paper
 
 详见 / See [docs/deploy.md](docs/deploy.md)
@@ -135,9 +135,9 @@ This project supports one-click deployment to GitHub Pages via GitHub Actions:
 
 ## 数据源 / Data Source
 
-当前仅使用 [OpenAlex](https://openalex.org/)（免费、开放的学术元数据 API）。
+当前仅使用 [OpenAlex](https://openalex.org/)（免费学术元数据 API，需注册获取 API key）。
 
-Currently using [OpenAlex](https://openalex.org/) only (free, open academic metadata API).
+Currently using [OpenAlex](https://openalex.org/) only (free academic metadata API, requires a free API key).
 
 ## License
 

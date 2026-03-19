@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 from btgraph.cache import FileCache
 from btgraph.models import Paper
-from btgraph.openalex import OpenAlexClient, OpenAlexError, DEFAULT_MAILTO
+from btgraph.openalex import OpenAlexClient, OpenAlexError
 
 logger = logging.getLogger(__name__)
 
@@ -87,8 +87,8 @@ def register(subparsers: argparse._SubParsersAction):
                    help="Max total nodes to collect (default: 500)")
     p.add_argument("--max-pages", type=int, default=5,
                    help="Max pagination pages per node (default: 5, ~1000 citers)")
-    p.add_argument("--mailto", default=None,
-                   help="Email for OpenAlex polite pool")
+    p.add_argument("--api-key", default=None,
+                   help="OpenAlex API key (from https://openalex.org/settings/api)")
     p.add_argument("--resume", action="store_true", default=True,
                    help="Resume from checkpoint if available (default)")
     p.add_argument("--no-resume", dest="resume", action="store_false",
@@ -117,8 +117,8 @@ def run(args: argparse.Namespace) -> int:
 
     # 2. Build client
     cache = FileCache(cache_dir)
-    mailto = getattr(args, "mailto", None) or DEFAULT_MAILTO
-    client = OpenAlexClient(cache=cache, mailto=mailto)
+    api_key = getattr(args, "api_key", None)
+    client = OpenAlexClient(cache=cache, api_key=api_key)
 
     # 3. Config for checkpoint matching
     config = {

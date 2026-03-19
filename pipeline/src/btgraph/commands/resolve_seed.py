@@ -8,7 +8,7 @@ import re
 
 from btgraph.cache import FileCache
 from btgraph.models import Paper
-from btgraph.openalex import OpenAlexClient, OpenAlexError, DEFAULT_MAILTO
+from btgraph.openalex import OpenAlexClient, OpenAlexError
 from btgraph.query_detect import QueryType, detect_query_type
 
 logger = logging.getLogger(__name__)
@@ -61,8 +61,8 @@ def register(subparsers: argparse._SubParsersAction):
     p.add_argument("query", help="DOI, arXiv ID, or paper title")
     p.add_argument("--output", "-o", default=None,
                    help="Output path (default: <data-dir>/seed_resolved.json)")
-    p.add_argument("--mailto", default=None,
-                   help="Email for OpenAlex polite pool (recommended)")
+    p.add_argument("--api-key", default=None,
+                   help="OpenAlex API key (from https://openalex.org/settings/api)")
     p.set_defaults(func=run)
 
 
@@ -77,8 +77,8 @@ def run(args: argparse.Namespace) -> int:
 
     # 2. Build client
     cache = FileCache(cache_dir)
-    mailto = getattr(args, "mailto", None) or DEFAULT_MAILTO
-    client = OpenAlexClient(cache=cache, mailto=mailto)
+    api_key = getattr(args, "api_key", None)
+    client = OpenAlexClient(cache=cache, api_key=api_key)
 
     # 3. Resolve
     work = None
