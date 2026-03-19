@@ -1,0 +1,315 @@
+{
+  "nodes": [
+    {
+      "id": "W2626778328",
+      "title": "Attention Is All You Need",
+      "authors": [{"name": "Ashish Vaswani"}, {"name": "Noam Shazeer"}, {"name": "Niki Parmar"}],
+      "year": 2017,
+      "paper_type": "technical",
+      "venue": "NeurIPS",
+      "doi": "10.48550/arXiv.1706.03762",
+      "arxiv_id": "1706.03762",
+      "cited_by_count": 120000,
+      "is_seed": true
+    },
+    {
+      "id": "W100",
+      "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "authors": [{"name": "Jacob Devlin"}, {"name": "Ming-Wei Chang"}],
+      "year": 2019,
+      "paper_type": "technical",
+      "venue": "NAACL",
+      "doi": "10.18653/v1/N19-1423",
+      "arxiv_id": "1810.04805",
+      "cited_by_count": 85000,
+      "is_seed": false
+    },
+    {
+      "id": "W101",
+      "title": "GPT-2: Language Models are Unsupervised Multitask Learners",
+      "authors": [{"name": "Alec Radford"}, {"name": "Jeffrey Wu"}],
+      "year": 2019,
+      "paper_type": "technical",
+      "venue": "OpenAI Technical Report",
+      "doi": null,
+      "arxiv_id": null,
+      "cited_by_count": 12000,
+      "is_seed": false
+    },
+    {
+      "id": "W102",
+      "title": "Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context",
+      "authors": [{"name": "Zihang Dai"}, {"name": "Zhilin Yang"}],
+      "year": 2019,
+      "paper_type": "technical",
+      "venue": "ACL",
+      "doi": "10.18653/v1/P19-1285",
+      "arxiv_id": "1901.02860",
+      "cited_by_count": 3500,
+      "is_seed": false
+    },
+    {
+      "id": "W103",
+      "title": "RoBERTa: A Robustly Optimized BERT Pretraining Approach",
+      "authors": [{"name": "Yinhan Liu"}, {"name": "Myle Ott"}],
+      "year": 2019,
+      "paper_type": "technical",
+      "venue": "arXiv",
+      "doi": null,
+      "arxiv_id": "1907.11692",
+      "cited_by_count": 18000,
+      "is_seed": false
+    },
+    {
+      "id": "W104",
+      "title": "ALBERT: A Lite BERT for Self-supervised Learning of Language Representations",
+      "authors": [{"name": "Zhenzhong Lan"}, {"name": "Mingda Chen"}],
+      "year": 2020,
+      "paper_type": "technical",
+      "venue": "ICLR",
+      "doi": null,
+      "arxiv_id": "1909.11942",
+      "cited_by_count": 7000,
+      "is_seed": false
+    },
+    {
+      "id": "W105",
+      "title": "GPT-3: Language Models are Few-Shot Learners",
+      "authors": [{"name": "Tom Brown"}, {"name": "Benjamin Mann"}],
+      "year": 2020,
+      "paper_type": "technical",
+      "venue": "NeurIPS",
+      "doi": null,
+      "arxiv_id": "2005.14165",
+      "cited_by_count": 35000,
+      "is_seed": false
+    },
+    {
+      "id": "W106",
+      "title": "DeBERTa: Decoding-enhanced BERT with Disentangled Attention",
+      "authors": [{"name": "Pengcheng He"}, {"name": "Xiaodong Liu"}],
+      "year": 2021,
+      "paper_type": "technical",
+      "venue": "ICLR",
+      "doi": null,
+      "arxiv_id": "2006.03654",
+      "cited_by_count": 4500,
+      "is_seed": false
+    },
+    {
+      "id": "W107",
+      "title": "Efficient Transformers: A Survey",
+      "authors": [{"name": "Yi Tay"}, {"name": "Mostafa Dehghani"}],
+      "year": 2022,
+      "paper_type": "technical",
+      "venue": "ACM Computing Surveys",
+      "doi": null,
+      "arxiv_id": "2009.06732",
+      "cited_by_count": 2800,
+      "is_seed": false
+    },
+    {
+      "id": "W108",
+      "title": "Longformer: The Long-Document Transformer",
+      "authors": [{"name": "Iz Beltagy"}, {"name": "Matthew E. Peters"}],
+      "year": 2020,
+      "paper_type": "technical",
+      "venue": "arXiv",
+      "doi": null,
+      "arxiv_id": "2004.05150",
+      "cited_by_count": 5000,
+      "is_seed": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "W2626778328",
+      "target": "W100",
+      "strength": "strong",
+      "rank_score": 0.8234,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.92)"},
+        "f_relevance": {"value": 0.75, "weight": 0.25, "contribution": 0.1875, "detail": "2 topic match; 3 shared refs"},
+        "f_branch": {"value": 0.9, "weight": 0.15, "contribution": 0.135, "detail": "3 strong + 1 medium downstream"},
+        "f_recency": {"value": 0.4, "weight": 0.2, "contribution": 0.08, "detail": "year=2019, range=2017-2022"}
+      },
+      "rank_among_siblings": 1,
+      "default_visible": true,
+      "summary": "BERT directly builds on the Transformer encoder from Vaswani et al. and outperforms previous baselines on 11 NLP tasks.",
+      "evidence_count": 5
+    },
+    {
+      "source": "W2626778328",
+      "target": "W101",
+      "strength": "strong",
+      "rank_score": 0.7512,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.88)"},
+        "f_relevance": {"value": 0.6, "weight": 0.25, "contribution": 0.15, "detail": "1 topic match; 2 shared refs"},
+        "f_branch": {"value": 0.6, "weight": 0.15, "contribution": 0.09, "detail": "1 strong + 1 medium downstream"},
+        "f_recency": {"value": 0.4, "weight": 0.2, "contribution": 0.08, "detail": "year=2019, range=2017-2022"}
+      },
+      "rank_among_siblings": 2,
+      "default_visible": true,
+      "summary": "GPT-2 uses the Transformer decoder architecture and scales it to 1.5B parameters, demonstrating strong zero-shot performance.",
+      "evidence_count": 3
+    },
+    {
+      "source": "W2626778328",
+      "target": "W102",
+      "strength": "strong",
+      "rank_score": 0.6890,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.85)"},
+        "f_relevance": {"value": 0.5, "weight": 0.25, "contribution": 0.125, "detail": "1 topic match"},
+        "f_branch": {"value": 0.3, "weight": 0.15, "contribution": 0.045, "detail": "1 strong downstream"},
+        "f_recency": {"value": 0.4, "weight": 0.2, "contribution": 0.08, "detail": "year=2019, range=2017-2022"}
+      },
+      "rank_among_siblings": 3,
+      "default_visible": true,
+      "summary": "Transformer-XL extends the Transformer with segment-level recurrence and relative positional encoding to handle longer contexts.",
+      "evidence_count": 4
+    },
+    {
+      "source": "W2626778328",
+      "target": "W108",
+      "strength": "strong",
+      "rank_score": 0.6450,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.82)"},
+        "f_relevance": {"value": 0.4, "weight": 0.25, "contribution": 0.1, "detail": "1 subfield match"},
+        "f_branch": {"value": 0.1, "weight": 0.15, "contribution": 0.015, "detail": "cited_by fallback: 5000"},
+        "f_recency": {"value": 0.6, "weight": 0.2, "contribution": 0.12, "detail": "year=2020, range=2017-2022"}
+      },
+      "rank_among_siblings": 4,
+      "default_visible": true,
+      "summary": "Longformer replaces the full self-attention of the Transformer with a combination of local and global attention for long documents.",
+      "evidence_count": 3
+    },
+    {
+      "source": "W2626778328",
+      "target": "W107",
+      "strength": "medium",
+      "rank_score": 0.4200,
+      "rank_breakdown": {
+        "f_strength": {"value": 0.6, "weight": 0.4, "contribution": 0.24, "detail": "medium (confidence=0.65)"},
+        "f_relevance": {"value": 0.3, "weight": 0.25, "contribution": 0.075, "detail": "1 subfield match"},
+        "f_branch": {"value": 0.1, "weight": 0.15, "contribution": 0.015, "detail": "cited_by fallback: 2800"},
+        "f_recency": {"value": 1.0, "weight": 0.2, "contribution": 0.2, "detail": "year=2022, range=2017-2022"}
+      },
+      "rank_among_siblings": 5,
+      "default_visible": false,
+      "summary": "This survey reviews efficient Transformer variants, using the original Transformer as the reference architecture.",
+      "evidence_count": 2
+    },
+    {
+      "source": "W100",
+      "target": "W103",
+      "strength": "strong",
+      "rank_score": 0.7800,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.90)"},
+        "f_relevance": {"value": 0.8, "weight": 0.25, "contribution": 0.2, "detail": "2 topic match; 5 shared refs"},
+        "f_branch": {"value": 0.3, "weight": 0.15, "contribution": 0.045, "detail": "1 strong downstream"},
+        "f_recency": {"value": 0.4, "weight": 0.2, "contribution": 0.08, "detail": "year=2019, range=2017-2022"}
+      },
+      "rank_among_siblings": 1,
+      "default_visible": true,
+      "summary": "RoBERTa shows that BERT was significantly undertrained and achieves state-of-the-art by optimizing pretraining recipe.",
+      "evidence_count": 6
+    },
+    {
+      "source": "W100",
+      "target": "W104",
+      "strength": "strong",
+      "rank_score": 0.7100,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.87)"},
+        "f_relevance": {"value": 0.7, "weight": 0.25, "contribution": 0.175, "detail": "2 topic match; 4 shared refs"},
+        "f_branch": {"value": 0.1, "weight": 0.15, "contribution": 0.015, "detail": "cited_by fallback: 7000"},
+        "f_recency": {"value": 0.6, "weight": 0.2, "contribution": 0.12, "detail": "year=2020, range=2017-2022"}
+      },
+      "rank_among_siblings": 2,
+      "default_visible": true,
+      "summary": "ALBERT reduces BERT parameters via factorized embedding and cross-layer sharing while matching performance.",
+      "evidence_count": 4
+    },
+    {
+      "source": "W100",
+      "target": "W106",
+      "strength": "strong",
+      "rank_score": 0.6950,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.86)"},
+        "f_relevance": {"value": 0.65, "weight": 0.25, "contribution": 0.1625, "detail": "2 topic match; 3 shared refs"},
+        "f_branch": {"value": 0.05, "weight": 0.15, "contribution": 0.0075, "detail": "cited_by fallback: 4500"},
+        "f_recency": {"value": 0.8, "weight": 0.2, "contribution": 0.16, "detail": "year=2021, range=2017-2022"}
+      },
+      "rank_among_siblings": 3,
+      "default_visible": true,
+      "summary": "DeBERTa improves BERT with disentangled attention and enhanced mask decoder, surpassing RoBERTa on SuperGLUE.",
+      "evidence_count": 5
+    },
+    {
+      "source": "W101",
+      "target": "W105",
+      "strength": "strong",
+      "rank_score": 0.8100,
+      "rank_breakdown": {
+        "f_strength": {"value": 1.0, "weight": 0.4, "contribution": 0.4, "detail": "strong (confidence=0.93)"},
+        "f_relevance": {"value": 0.85, "weight": 0.25, "contribution": 0.2125, "detail": "3 topic match; 4 shared refs"},
+        "f_branch": {"value": 0.5, "weight": 0.15, "contribution": 0.075, "detail": "2 strong downstream"},
+        "f_recency": {"value": 0.6, "weight": 0.2, "contribution": 0.12, "detail": "year=2020, range=2017-2022"}
+      },
+      "rank_among_siblings": 1,
+      "default_visible": true,
+      "summary": "GPT-3 scales the GPT-2 architecture to 175B parameters and demonstrates remarkable few-shot learning capabilities.",
+      "evidence_count": 4
+    },
+    {
+      "source": "W102",
+      "target": "W108",
+      "strength": "medium",
+      "rank_score": 0.4800,
+      "rank_breakdown": {
+        "f_strength": {"value": 0.6, "weight": 0.4, "contribution": 0.24, "detail": "medium (confidence=0.62)"},
+        "f_relevance": {"value": 0.5, "weight": 0.25, "contribution": 0.125, "detail": "1 topic match; 2 shared refs"},
+        "f_branch": {"value": 0.1, "weight": 0.15, "contribution": 0.015, "detail": "cited_by fallback: 5000"},
+        "f_recency": {"value": 0.6, "weight": 0.2, "contribution": 0.12, "detail": "year=2020, range=2017-2022"}
+      },
+      "rank_among_siblings": 1,
+      "default_visible": false,
+      "summary": "Longformer cites Transformer-XL as a related approach to handling long sequences but uses a different attention pattern.",
+      "evidence_count": 2
+    },
+    {
+      "source": "W103",
+      "target": "W106",
+      "strength": "medium",
+      "rank_score": 0.5100,
+      "rank_breakdown": {
+        "f_strength": {"value": 0.6, "weight": 0.4, "contribution": 0.24, "detail": "medium (confidence=0.68)"},
+        "f_relevance": {"value": 0.7, "weight": 0.25, "contribution": 0.175, "detail": "2 topic match; 3 shared refs"},
+        "f_branch": {"value": 0.05, "weight": 0.15, "contribution": 0.0075, "detail": "cited_by fallback: 4500"},
+        "f_recency": {"value": 0.8, "weight": 0.2, "contribution": 0.16, "detail": "year=2021, range=2017-2022"}
+      },
+      "rank_among_siblings": 1,
+      "default_visible": false,
+      "summary": "DeBERTa compares against RoBERTa as a primary baseline on GLUE and SuperGLUE benchmarks.",
+      "evidence_count": 3
+    }
+  ],
+  "metadata": {
+    "seed_id": "W2626778328",
+    "generated_at": "2025-05-01T12:00:00Z",
+    "node_count": 10,
+    "edge_count": 11,
+    "strong_edge_count": 8,
+    "medium_edge_count": 3,
+    "pruning_config": {
+      "top_k": 5,
+      "weights": {"strength": 0.4, "relevance": 0.25, "branch": 0.15, "recency": 0.2},
+      "include_medium": true
+    }
+  }
+}

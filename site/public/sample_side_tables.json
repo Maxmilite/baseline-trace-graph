@@ -1,0 +1,67 @@
+{
+  "tables": {
+    "survey": [
+      {
+        "id": "W200",
+        "title": "A Survey of Transformers",
+        "authors": [{"name": "Tianyang Lin"}, {"name": "Yuxin Wang"}],
+        "year": 2022,
+        "paper_type": "survey",
+        "venue": "AI Open",
+        "cited_by_count": 1200,
+        "edges_to_main_graph": [
+          {"source": "W2626778328", "target": "W200", "strength": "weak"},
+          {"source": "W100", "target": "W200", "strength": "weak"}
+        ]
+      },
+      {
+        "id": "W201",
+        "title": "Pre-trained Models for Natural Language Processing: A Survey",
+        "authors": [{"name": "Xipeng Qiu"}, {"name": "Tianxiang Sun"}],
+        "year": 2020,
+        "paper_type": "survey",
+        "venue": "Science China",
+        "cited_by_count": 800,
+        "edges_to_main_graph": [
+          {"source": "W2626778328", "target": "W201", "strength": "weak"}
+        ]
+      }
+    ],
+    "dataset": [
+      {
+        "id": "W300",
+        "title": "GLUE: A Multi-Task Benchmark and Analysis Platform",
+        "authors": [{"name": "Alex Wang"}, {"name": "Amanpreet Singh"}],
+        "year": 2019,
+        "paper_type": "dataset",
+        "venue": "ICLR",
+        "cited_by_count": 6500,
+        "edges_to_main_graph": [
+          {"source": "W100", "target": "W300", "strength": "strong"}
+        ]
+      }
+    ],
+    "benchmark": [
+      {
+        "id": "W400",
+        "title": "SuperGLUE: A Stickier Benchmark for General-Purpose Language Understanding",
+        "authors": [{"name": "Alex Wang"}, {"name": "Yada Pruksachatkun"}],
+        "year": 2019,
+        "paper_type": "benchmark",
+        "venue": "NeurIPS",
+        "cited_by_count": 3200,
+        "edges_to_main_graph": [
+          {"source": "W100", "target": "W400", "strength": "strong"},
+          {"source": "W103", "target": "W400", "strength": "medium"}
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "seed_id": "W2626778328",
+    "generated_at": "2025-05-01T12:00:00Z",
+    "survey_count": 2,
+    "dataset_count": 1,
+    "benchmark_count": 1
+  }
+}

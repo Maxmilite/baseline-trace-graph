@@ -12,6 +12,7 @@ venv/
 # Node
 node_modules/
 site/dist/
+*.tsbuildinfo
 
 # Project runtime data
 data/
