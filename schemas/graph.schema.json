@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "graph.schema.json",
+  "title": "BaselineTraceGraph",
+  "description": "Complete baseline-trace graph output",
+  "type": "object",
+  "required": ["nodes", "edges", "metadata"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "paper.schema.json" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "edge.schema.json" }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["seed_id", "generated_at"],
+      "properties": {
+        "seed_id": { "type": "string" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "node_count": { "type": "integer" },
+        "edge_count": { "type": "integer" },
+        "strong_edge_count": { "type": "integer" },
+        "medium_edge_count": { "type": "integer" }
+      }
+    }
+  }
+}

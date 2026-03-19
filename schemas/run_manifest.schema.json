@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run_manifest.schema.json",
+  "title": "RunManifest",
+  "description": "Metadata for a single pipeline run",
+  "type": "object",
+  "required": ["run_id", "seed", "stages"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "seed": {
+      "type": "object",
+      "required": ["input_query"],
+      "properties": {
+        "input_query": {
+          "type": "string",
+          "description": "Original user input (DOI, arXiv ID, or title)"
+        },
+        "resolved_id": { "type": ["string", "null"] }
+      }
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "data_source": { "type": "string", "default": "openalex" },
+        "min_edge_strength": {
+          "type": "string",
+          "enum": ["strong", "medium"],
+          "default": "medium"
+        }
+      }
+    },
+    "stages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["pending", "running", "success", "failed", "skipped"]
+          },
+          "started_at": { "type": ["string", "null"], "format": "date-time" },
+          "finished_at": { "type": ["string", "null"], "format": "date-time" },
+          "output_file": { "type": ["string", "null"] },
+          "error": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

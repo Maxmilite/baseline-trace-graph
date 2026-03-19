@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "paper.schema.json",
+  "title": "Paper",
+  "description": "A paper node in the baseline-trace graph",
+  "type": "object",
+  "required": ["id", "title"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier: OpenAlex work ID (e.g. W2123456789)"
+    },
+    "doi": { "type": ["string", "null"] },
+    "arxiv_id": { "type": ["string", "null"] },
+    "title": { "type": "string" },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "openalex_id": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "year": { "type": ["integer", "null"] },
+    "paper_type": {
+      "type": "string",
+      "enum": ["technical", "survey", "dataset", "benchmark", "application", "theory", "system", "unknown"],
+      "default": "unknown"
+    },
+    "abstract": { "type": ["string", "null"] },
+    "source": {
+      "type": "string",
+      "enum": ["openalex", "manual"],
+      "default": "openalex"
+    },
+    "openalex_id": { "type": ["string", "null"] },
+    "venue": { "type": ["string", "null"] },
+    "cited_by_count": { "type": ["integer", "null"] },
+    "open_access_url": { "type": ["string", "null"] }
+  }
+}

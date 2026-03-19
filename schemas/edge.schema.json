@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "edge.schema.json",
+  "title": "Edge",
+  "description": "A directed edge A→B meaning B treats A as a baseline/predecessor",
+  "type": "object",
+  "required": ["source", "target", "strength"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "Paper ID of the predecessor (A)"
+    },
+    "target": {
+      "type": "string",
+      "description": "Paper ID of the citing paper (B)"
+    },
+    "strength": {
+      "type": "string",
+      "enum": ["strong", "medium", "weak"]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "text"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "table_mention",
+              "result_comparison",
+              "figure_caption",
+              "method_discussion",
+              "improvement_claim",
+              "related_work_only",
+              "generic_citation"
+            ],
+            "description": "Category of evidence supporting this edge"
+          },
+          "text": {
+            "type": "string",
+            "description": "Extracted text snippet as evidence"
+          },
+          "section": {
+            "type": ["string", "null"],
+            "description": "Section of paper B where evidence was found"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": ["string", "null"],
+      "description": "Human-readable summary: what B changed relative to A and why it matters"
+    }
+  }
+}
