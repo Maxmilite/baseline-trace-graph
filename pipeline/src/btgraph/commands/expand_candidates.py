@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 
 from btgraph.cache import FileCache
 from btgraph.models import Paper
-from btgraph.openalex import OpenAlexClient, OpenAlexError
+from btgraph.s2 import S2Client, S2Error
 
 logger = logging.getLogger(__name__)
 
@@ -85,10 +85,10 @@ def register(subparsers: argparse._SubParsersAction):
                    help="Max BFS depth from seed (default: 3)")
     p.add_argument("--max-nodes", type=int, default=500,
                    help="Max total nodes to collect (default: 500)")
-    p.add_argument("--max-pages", type=int, default=5,
-                   help="Max pagination pages per node (default: 5, ~1000 citers)")
-    p.add_argument("--api-key", default=None,
-                   help="OpenAlex API key (from https://openalex.org/settings/api)")
+    p.add_argument("--max-citations", type=int, default=1000,
+                   help="Max citations to fetch per node (default: 1000)")
+    p.add_argument("--s2-api-key", default=None,
+                   help="Semantic Scholar API key (optional, for higher rate limits)")
     p.add_argument("--resume", action="store_true", default=True,
                    help="Resume from checkpoint if available (default)")
     p.add_argument("--no-resume", dest="resume", action="store_false",
@@ -100,7 +100,7 @@ def run(args: argparse.Namespace) -> int:
     """Returns: 0=success, 1=error, 2=partial."""
     input_path = args.input or f"{args.data_dir}/seed_resolved.json"
     output_dir = args.output or args.data_dir
-    cache_dir = os.path.join(args.data_dir, "cache", "openalex")
+    cache_dir = os.path.join(args.data_dir, "cache", "s2")
     checkpoint_path = os.path.join(output_dir, "expand_checkpoint.json")
     started_at = datetime.now(timezone.utc)
 
@@ -117,14 +117,14 @@ def run(args: argparse.Namespace) -> int:
 
     # 2. Build client
     cache = FileCache(cache_dir)
-    api_key = getattr(args, "api_key", None)
-    client = OpenAlexClient(cache=cache, api_key=api_key)
+    api_key = getattr(args, "s2_api_key", None)
+    client = S2Client(cache=cache, api_key=api_key)
 
     # 3. Config for checkpoint matching
     config = {
         "max_depth": args.max_depth,
         "max_nodes": args.max_nodes,
-        "max_pages": args.max_pages,
+        "max_citations": args.max_citations,
     }
 
     # 4. Initialize or resume
@@ -158,10 +158,10 @@ def run(args: argparse.Namespace) -> int:
                     current_id, current_depth, len(nodes), args.max_nodes)
 
         try:
-            works, total = client.get_citing_works(
-                current_id, max_pages=args.max_pages
+            works, total = client.get_citations(
+                current_id, max_results=args.max_citations,
             )
-        except OpenAlexError as e:
+        except S2Error as e:
             logger.warning("Failed to expand %s: %s", current_id, e)
             stats["nodes_failed"] += 1
             _save_checkpoint(checkpoint_path, seed_id, config,
@@ -173,9 +173,12 @@ def run(args: argparse.Namespace) -> int:
 
         for work in works:
             try:
-                child = Paper.from_openalex(work)
+                child = Paper.from_s2(work)
             except Exception as e:
                 logger.warning("Failed to parse work: %s", e)
+                continue
+
+            if not child.id:
                 continue
 
             # Record edge (even if node already visited)
@@ -245,7 +248,7 @@ def run(args: argparse.Namespace) -> int:
         "input_query": seed_data.get("title", seed_id),
         "resolved_id": seed_id,
     })
-    manifest.setdefault("config", {"data_source": "openalex"})
+    manifest.setdefault("config", {"data_source": "s2"})
     manifest.setdefault("stages", {})
     manifest.setdefault("created_at", started_at.isoformat())
 

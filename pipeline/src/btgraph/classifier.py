@@ -1,7 +1,7 @@
 """Rule-based paper type classifier and visibility policy.
 
 Classifies papers into types (technical, survey, dataset, benchmark, etc.)
-using metadata signals from OpenAlex. Determines visibility in the graph.
+using metadata signals from Semantic Scholar. Determines visibility in the graph.
 """
 
 import re
@@ -67,14 +67,14 @@ _BENCHMARK_ABSTRACT = re.compile(
     r"new benchmark|novel benchmark|benchmark suite)\b", re.IGNORECASE
 )
 
-# OpenAlex types that map directly
-_OPENALEX_TYPE_MAP: dict[str, str] = {
-    "review": "survey",
-    "dataset": "dataset",
+# S2 publicationTypes that map directly
+_S2_TYPE_MAP: dict[str, str] = {
+    "Review": "survey",
+    "Dataset": "dataset",
 }
 
-# Standard technical types
-_TECHNICAL_OPENALEX_TYPES = {"article", "preprint", "conference-paper", "posted-content"}
+# S2 publicationTypes considered technical
+_TECHNICAL_S2_TYPES = {"JournalArticle", "Conference", "Book", "BookSection"}
 
 
 def _apply_visibility(paper_type: str, confidence: float, reason: str) -> ClassificationResult:
@@ -98,7 +98,7 @@ def classify_paper(paper: dict) -> ClassificationResult:
     title = (paper.get("title") or "").strip()
     abstract = (paper.get("abstract") or "").strip()
     venue = (paper.get("venue") or "").strip()
-    oa_type = (paper.get("openalex_type") or "").strip().lower()
+    pub_types = paper.get("publication_types") or []
     topics = paper.get("topics") or []
 
     # --- Rule 1: Title keywords (highest precision) ---
@@ -109,10 +109,11 @@ def classify_paper(paper: dict) -> ClassificationResult:
     if _DATASET_TITLE.search(title):
         return _apply_visibility("dataset", 0.9, f"Title keyword match: dataset/corpus in '{title[:80]}'")
 
-    # --- Rule 2: OpenAlex type ---
-    if oa_type in _OPENALEX_TYPE_MAP:
-        mapped = _OPENALEX_TYPE_MAP[oa_type]
-        return _apply_visibility(mapped, 0.85, f"OpenAlex type: {oa_type}")
+    # --- Rule 2: S2 publicationTypes ---
+    for pt in pub_types:
+        if pt in _S2_TYPE_MAP:
+            mapped = _S2_TYPE_MAP[pt]
+            return _apply_visibility(mapped, 0.85, f"S2 publicationType: {pt}")
 
     # --- Rule 3: Venue keywords ---
     if venue:
@@ -132,26 +133,31 @@ def classify_paper(paper: dict) -> ClassificationResult:
         if _BENCHMARK_ABSTRACT.search(abstract_start):
             return _apply_visibility("benchmark", 0.6, "Abstract keyword: benchmark introduction phrase")
 
-    # --- Rule 5: Topic signals ---
+    # --- Rule 5: S2 field of study signals ---
     for topic in topics:
-        name = (topic.get("display_name") or "").lower()
-        score = topic.get("score", 0)
-        if score < 0.5:
+        category = (topic.get("category") or "").lower()
+        source = topic.get("source", "")
+        if source != "s2-fos-model":
             continue
-        if "survey" in name or "review" in name:
-            return _apply_visibility("survey", 0.5, f"Topic signal: '{topic.get('display_name')}' (score={score:.2f})")
-        if "benchmark" in name:
-            return _apply_visibility("benchmark", 0.5, f"Topic signal: '{topic.get('display_name')}' (score={score:.2f})")
-        if "dataset" in name:
-            return _apply_visibility("dataset", 0.5, f"Topic signal: '{topic.get('display_name')}' (score={score:.2f})")
+        if "survey" in category or "review" in category:
+            return _apply_visibility("survey", 0.5, f"S2 field signal: '{topic.get('category')}'")
+        if "benchmark" in category:
+            return _apply_visibility("benchmark", 0.5, f"S2 field signal: '{topic.get('category')}'")
+        if "dataset" in category:
+            return _apply_visibility("dataset", 0.5, f"S2 field signal: '{topic.get('category')}'")
 
     # --- Rule 6: Default ---
-    if oa_type in _TECHNICAL_OPENALEX_TYPES:
+    if any(pt in _TECHNICAL_S2_TYPES for pt in pub_types):
         return _apply_visibility("technical", 0.4,
-                                 f"Default: openalex_type={oa_type}, no survey/dataset/benchmark signals")
+                                 f"Default: S2 types={pub_types}, no survey/dataset/benchmark signals")
+
+    # If no publication types but has a title, likely technical
+    if title:
+        return _apply_visibility("technical", 0.3,
+                                 "Default: has title but no S2 type info")
 
     return _apply_visibility("unknown", 0.0,
-                             f"No classification signals (openalex_type={oa_type or 'none'})")
+                             f"No classification signals (pub_types={pub_types or 'none'})")
 
 
 def classify_paper_with_model(paper: dict, model_fn=None) -> ClassificationResult:
@@ -161,5 +167,4 @@ def classify_paper_with_model(paper: dict, model_fn=None) -> ClassificationResul
     """
     if model_fn is None:
         return classify_paper(paper)
-    # Future: call model_fn(paper) -> {"paper_type": ..., "confidence": ..., "reason": ...}
     raise NotImplementedError("Model-based classification not yet implemented")

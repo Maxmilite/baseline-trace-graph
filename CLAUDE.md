@@ -79,11 +79,11 @@ baseline-trace-graph
 
 ## 数据源策略
 当前阶段只使用：
-- OpenAlex 作为主元数据和 citation 数据源
+- Semantic Scholar 作为主元数据和 citation 数据源
 - Open-access full text 用于证据抽取
 
 当前阶段不使用：
-- Semantic Scholar
+- OpenAlex
 - 闭源付费数据库
 - 需要复杂运维的服务
 

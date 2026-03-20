@@ -38,19 +38,19 @@ jobs:
       - name: Install pipeline
         run: pip install -e pipeline/
 
-      - name: Restore OpenAlex cache
+      - name: Restore S2 cache
         uses: actions/cache@v4
         with:
-          path: data/cache/openalex
-          key: openalex-cache-${{ github.run_id }}
+          path: data/cache/s2
+          key: s2-cache-${{ github.run_id }}
           restore-keys: |
-            openalex-cache-
+            s2-cache-
 
       - name: "Pipeline: resolve-seed"
-        run: btgraph resolve-seed "${{ inputs.seed_query }}" --api-key "${{ secrets.OPENALEX_API_KEY }}"
+        run: btgraph resolve-seed "${{ inputs.seed_query }}" ${{ secrets.S2_API_KEY && format('--s2-api-key "{0}"', secrets.S2_API_KEY) || '' }}
 
       - name: "Pipeline: expand-candidates"
-        run: btgraph expand-candidates --api-key "${{ secrets.OPENALEX_API_KEY }}"
+        run: btgraph expand-candidates ${{ secrets.S2_API_KEY && format('--s2-api-key "{0}"', secrets.S2_API_KEY) || '' }}
 
       - name: "Pipeline: classify-papers"
         run: btgraph classify-papers

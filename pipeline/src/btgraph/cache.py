@@ -1,7 +1,7 @@
 """File-based HTTP response cache.
 
 Stores API responses as JSON files keyed by SHA-256 of the request URL.
-Cache directory: <data-dir>/cache/openalex/
+Cache directory: <data-dir>/cache/s2/
 """
 
 import hashlib

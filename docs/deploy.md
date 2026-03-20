@@ -3,9 +3,10 @@
 ## Prerequisites
 
 1. **GitHub Pages**: Settings → Pages → Source → select **GitHub Actions**
-2. **Repository Secret**: Settings → Secrets and variables → Actions → New repository secret
-   - Name: `OPENALEX_API_KEY`
-   - Value: your API key from [openalex.org/settings/api](https://openalex.org/settings/api) (free, takes 30 seconds to register)
+2. **Repository Secret** (optional, for higher rate limits): Settings → Secrets and variables → Actions → New repository secret
+   - Name: `S2_API_KEY`
+   - Value: your Semantic Scholar API key (request at [semanticscholar.org](https://www.semanticscholar.org/product/api#api-key-form))
+   - Without a key, the API allows ~100 requests/second which is sufficient for most runs
 
 ## How to Trigger
 
@@ -25,9 +26,9 @@ The workflow runs two jobs:
 ### Build job
 1. Sets up Python 3.12 and Node 20
 2. Installs the `btgraph` pipeline CLI
-3. Restores cached OpenAlex API responses (if any)
+3. Restores cached Semantic Scholar API responses (if any)
 4. Runs the 8-step pipeline sequentially:
-   - `resolve-seed` → resolves the seed paper via OpenAlex
+   - `resolve-seed` → resolves the seed paper via Semantic Scholar
    - `expand-candidates` → BFS expansion of citing papers
    - `classify-papers` → classifies paper types (technical, survey, etc.)
    - `fetch-content` → downloads open-access full text
@@ -57,7 +58,7 @@ The `pipeline-data` artifact is uploaded even if the workflow fails, which helps
 Three caches speed up subsequent runs:
 - **pip**: Python package cache (httpx)
 - **npm**: Node module cache (React, Vite, etc.)
-- **OpenAlex API**: Response cache in `data/cache/openalex/` — the biggest time saver on reruns with the same or overlapping seed papers
+- **Semantic Scholar API**: Response cache in `data/cache/s2/` — the biggest time saver on reruns with the same or overlapping seed papers
 
 ## Troubleshooting
 
@@ -68,15 +69,15 @@ This is expected. The `fetch-content` step may return exit code 2 when some pape
 The seed query couldn't be resolved. Check:
 - Is the DOI/arXiv ID correct?
 - For title search, try a more specific title string
-- Check if OpenAlex is reachable (rare outages)
+- Check if Semantic Scholar is reachable (rare outages)
 
 ### Pipeline fails at expand-candidates
-Usually a network issue or OpenAlex rate limiting. The step supports checkpoint/resume, so re-running the workflow will pick up where it left off (via the OpenAlex cache).
+Usually a network issue or rate limiting. The step supports checkpoint/resume, so re-running the workflow will pick up where it left off (via the S2 cache).
 
-### API key issues
-- Get a free API key at [openalex.org/settings/api](https://openalex.org/settings/api)
-- Without a key, you get very limited access
-- Ensure the `OPENALEX_API_KEY` secret is set correctly in repository settings
+### Rate limiting
+- Without an API key, Semantic Scholar allows ~100 requests/second
+- For large graphs (>500 nodes), consider adding an `S2_API_KEY` secret for higher limits
+- Request a key at [semanticscholar.org](https://www.semanticscholar.org/product/api#api-key-form)
 
 ### Deploy job fails
 - Verify GitHub Pages is enabled with source set to "GitHub Actions"
@@ -90,6 +91,6 @@ Usually a network issue or OpenAlex rate limiting. The step supports checkpoint/
 
 ## Security
 
-- `OPENALEX_API_KEY` is only used as a CLI argument during the build job
+- `S2_API_KEY` (if set) is only used as a CLI argument during the build job
 - No secrets are injected into the frontend bundle (Vite only exposes `VITE_`-prefixed env vars)
 - The deployed site contains only static HTML/JS/CSS and JSON data files

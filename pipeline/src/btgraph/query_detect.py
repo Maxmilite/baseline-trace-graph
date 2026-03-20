@@ -1,6 +1,6 @@
 """Input type detection for seed paper queries.
 
-Priority: DOI > arXiv > OpenAlex ID > title.
+Priority: DOI > arXiv > title.
 """
 
 import re
@@ -10,7 +10,6 @@ from enum import Enum
 class QueryType(Enum):
     DOI = "doi"
     ARXIV = "arxiv"
-    OPENALEX = "openalex"
     TITLE = "title"
 
 
@@ -20,11 +19,6 @@ _DOI_PREFIX = re.compile(r"^(?:https?://doi\.org/)?(?:doi:)?(10\.\d{4,}/.+)$", r
 # arXiv pattern: YYMM.NNNNN (with optional prefix)
 _ARXIV_PREFIX = re.compile(
     r"^(?:https?://arxiv\.org/abs/)?(?:arxiv:)?(\d{4}\.\d{4,}(?:v\d+)?)$", re.IGNORECASE
-)
-
-# OpenAlex pattern: W followed by digits (with optional URL prefix)
-_OPENALEX_PREFIX = re.compile(
-    r"^(?:https?://openalex\.org/)?(W\d+)$", re.IGNORECASE
 )
 
 
@@ -42,9 +36,5 @@ def detect_query_type(query: str) -> tuple[QueryType, str]:
     m = _ARXIV_PREFIX.match(q)
     if m:
         return QueryType.ARXIV, m.group(1)
-
-    m = _OPENALEX_PREFIX.match(q)
-    if m:
-        return QueryType.OPENALEX, m.group(1).upper()
 
     return QueryType.TITLE, q

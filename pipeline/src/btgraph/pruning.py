@@ -90,55 +90,36 @@ def compute_strength_factor(edge_level: str, confidence: float) -> tuple[float, 
 
 
 def compute_topic_relevance(child: dict, seed: dict) -> tuple[float, str]:
-    """Topic overlap between child and seed using OpenAlex topic hierarchy."""
+    """Topic overlap between child and seed using S2 fields of study."""
     child_topics = child.get("topics") or []
     seed_topics = seed.get("topics") or []
 
     if not seed_topics:
         return 0.0, "seed has no topics"
 
-    # Extract IDs at each level
-    seed_topic_ids = {t.get("id") for t in seed_topics if t.get("id")}
-    seed_subfields = set()
-    seed_fields = set()
-    for t in seed_topics:
-        sf = t.get("subfield", {})
-        if isinstance(sf, dict) and sf.get("id"):
-            seed_subfields.add(sf["id"])
-        f = t.get("field", {})
-        if isinstance(f, dict) and f.get("id"):
-            seed_fields.add(f["id"])
+    # S2 topics are [{category: "Computer Science", source: "s2-fos-model"}, ...]
+    seed_categories = {
+        t.get("category", "").lower()
+        for t in seed_topics
+        if t.get("category")
+    }
+
+    if not seed_categories:
+        return 0.0, "seed has no topic categories"
 
     score = 0.0
     details = []
 
-    topic_matches = 0
-    subfield_matches = 0
-    field_matches = 0
-
+    # Category matching
+    category_matches = 0
     for t in child_topics:
-        tid = t.get("id")
-        if tid and tid in seed_topic_ids:
-            topic_matches += 1
-            continue
-        sf = t.get("subfield", {})
-        if isinstance(sf, dict) and sf.get("id") and sf["id"] in seed_subfields:
-            subfield_matches += 1
-            continue
-        f = t.get("field", {})
-        if isinstance(f, dict) and f.get("id") and f["id"] in seed_fields:
-            field_matches += 1
+        cat = (t.get("category") or "").lower()
+        if cat and cat in seed_categories:
+            category_matches += 1
 
-    score += topic_matches * 0.4
-    score += subfield_matches * 0.2
-    score += field_matches * 0.05
-
-    if topic_matches:
-        details.append(f"{topic_matches} topic match")
-    if subfield_matches:
-        details.append(f"{subfield_matches} subfield match")
-    if field_matches:
-        details.append(f"{field_matches} field match")
+    if category_matches:
+        score += min(1.0, category_matches * 0.3)
+        details.append(f"{category_matches} category match")
 
     # Bibliographic coupling bonus
     child_refs = set(child.get("referenced_works") or [])

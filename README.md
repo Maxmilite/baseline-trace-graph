@@ -8,14 +8,14 @@ A research evolution backbone graph tool — starting from a seed paper, recursi
 
 给定一篇论文（seed paper），本工具会：
 
-1. 通过 OpenAlex 查找所有引用它的后续论文
+1. 通过 Semantic Scholar 查找所有引用它的后续论文
 2. 递归展开，构建候选引用网络
 3. 对每条引用边进行分级（strong / medium / weak），只保留"真正把前人工作当作 baseline 来比较或继承"的边
 4. 输出一个可交互的静态网页，展示研究主干图
 
 Given a seed paper, this tool will:
 
-1. Find all subsequent papers citing it via OpenAlex
+1. Find all subsequent papers citing it via Semantic Scholar
 2. Recursively expand to build a candidate citation network
 3. Grade each citation edge (strong / medium / weak), keeping only edges where the citing paper genuinely treats the cited work as a baseline to compare against or build upon
 4. Output an interactive static website showing the research backbone graph
@@ -46,11 +46,11 @@ cd ../site && npm install
 ### 本地运行 / Local Run
 
 ```bash
-# 1. 解析 seed paper
-btgraph resolve-seed "Attention Is All You Need" --api-key YOUR_KEY
+# 1. 解析 seed paper（S2 API key 可选，不带也能跑）
+btgraph resolve-seed "Attention Is All You Need"
 
 # 2. 展开候选引用网络
-btgraph expand-candidates --api-key YOUR_KEY
+btgraph expand-candidates
 
 # 3. 分类论文类型
 btgraph classify-papers
@@ -83,7 +83,7 @@ cd site && npm run build && npm run preview
 This project supports one-click deployment to GitHub Pages via GitHub Actions:
 
 1. Settings → Pages → Source → **GitHub Actions**
-2. Settings → Secrets → 添加 `OPENALEX_API_KEY`（从 [openalex.org/settings/api](https://openalex.org/settings/api) 获取，免费注册）
+2. Settings → Secrets → 添加 `S2_API_KEY`（可选，用于更高速率限制；从 [semanticscholar.org](https://www.semanticscholar.org/product/api#api-key-form) 申请）
 3. Actions → **Deploy Baseline Trace Graph** → Run workflow → 输入 seed paper
 
 详见 / See [docs/deploy.md](docs/deploy.md)
@@ -135,9 +135,9 @@ This project supports one-click deployment to GitHub Pages via GitHub Actions:
 
 ## 数据源 / Data Source
 
-当前仅使用 [OpenAlex](https://openalex.org/)（免费学术元数据 API，需注册获取 API key）。
+当前使用 [Semantic Scholar](https://www.semanticscholar.org/)（免费学术元数据 API，无需 API key 即可使用，申请 key 可获得更高速率限制）。
 
-Currently using [OpenAlex](https://openalex.org/) only (free academic metadata API, requires a free API key).
+Currently using [Semantic Scholar](https://www.semanticscholar.org/) (free academic metadata API, works without an API key, request a key for higher rate limits).
 
 ## License
 
